@@ -80,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         // Vincula componentes
         buttonLayout = findViewById(R.id.buttonLayout);
         feedButton = findViewById(R.id.feedButton);
@@ -120,59 +119,28 @@ public class MainActivity extends AppCompatActivity {
         playButton.setVisibility(View.GONE);
         buttonMedicar.setVisibility(View.GONE);
         buttonEclodir.setVisibility(View.GONE);
-
-
         // Ajusta padding para sistema de barras (status/navigation)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // Botão aquecer ovo
-        buttonAquecer.setOnClickListener(v -> {
-            if (!isOvo) return;
-            aquecimentos++;
-            // Aqui você pode animar o ovo se quiser
-        // Botão Aquecer (fase do ovo)
-        buttonAquecer.setOnClickListener(v -> {
-            if (!isOvo) return;
+            // Botão Aquecer (fase do ovo)
+            buttonAquecer.setOnClickListener(v -> {
+                if (!isOvo) return;
 
-            aquecimentos++;
-            animarAquecimentoOvo();
+                aquecimentos++;
 
-            if (aquecimentos >= AQUECIMENTOS_PARA_ECLODIR) {
-                Toast.makeText(this, "O ovo está pronto para eclodir!", Toast.LENGTH_SHORT).show();
-                buttonEclodir.setVisibility(View.VISIBLE);
-                buttonAquecer.setEnabled(false);
-            }
-        });
+                if (aquecimentos >= AQUECIMENTOS_PARA_ECLODIR) {
+                    Toast.makeText(this, "O ovo está pronto para eclodir!", Toast.LENGTH_SHORT).show();
+                    buttonEclodir.setVisibility(View.VISIBLE);
+                    buttonAquecer.setEnabled(false);
+                }
+            });
 
-        // Botão Eclodir (libera o pet)
-        buttonEclodir.setOnClickListener(v -> {
-            eggImage.setVisibility(View.GONE);
-            buttonAquecer.setVisibility(View.GONE);
-            buttonEclodir.setVisibility(View.GONE);
-            petImage.setVisibility(View.VISIBLE);
-            lifeBar.setVisibility(View.VISIBLE);
-            feedButton.setVisibility(View.VISIBLE);
-            playButton.setVisibility(View.VISIBLE);
-            buttonMedicar.setVisibility(View.VISIBLE);
-            isEggStage = false;
-            isOvo = false;
-            iniciarTimerDoenca();
-            iniciarMonitoramentoInatividade();
-            vidaHandler.postDelayed(vidaRunnable, INTERVALO_VIDA);
-        });
-
-            if (aquecimentos >= AQUECIMENTOS_PARA_ECLODIR) {
-                Toast.makeText(this, "O ovo está pronto para eclodir!", Toast.LENGTH_SHORT).show();
-                buttonEclodir.setVisibility(View.VISIBLE);
-                buttonAquecer.setEnabled(false);
-            }
-        });
-
-        // Botão eclodir ovo
+            // Botão Eclodir (libera o pet)
         buttonEclodir.setOnClickListener(v -> {
             eggImage.setVisibility(View.GONE);
             buttonAquecer.setVisibility(View.GONE);
@@ -190,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
             vidaHandler.postDelayed(vidaRunnable, INTERVALO_VIDA);
         });
 
+
         // Botão alimentar
         feedButton.setOnClickListener(v -> {
             if (isPetDoente) {
@@ -203,7 +172,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Botão de jogar
->>>>>>> b22453416960a8a5dc6c6f96a61622fece235dd9
         playButton.setOnClickListener(v -> {
             abrirMenuMinigames();
             resetarInatividade();
@@ -222,11 +190,8 @@ public class MainActivity extends AppCompatActivity {
             resetarInatividade();
         });
 
-<<<<<<< HEAD
-        // Interação ao tocar no pet (carinho / tapas)
-=======
+
         // Interações de toque no pet
->>>>>>> b22453416960a8a5dc6c6f96a61622fece235dd9
         petImage.setOnTouchListener((v, event) -> {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
@@ -240,7 +205,6 @@ public class MainActivity extends AppCompatActivity {
                         isPetHappy = true;
                         somFeliz.start();
                         Toast.makeText(this, "Você fez carinho no pet!", Toast.LENGTH_SHORT).show();
-                        
                         new Handler().postDelayed(() -> {
                             atualizarImagemPet(R.drawable.pet);
                             isPetHappy = false;
@@ -280,8 +244,6 @@ public class MainActivity extends AppCompatActivity {
         tremor.setInterpolator(new CycleInterpolator(5));
         eggImage.startAnimation(tremor);
     }
-
->>>>>>> b22453416960a8a5dc6c6f96a61622fece235dd9
     private void atualizarImagemPet(int resId) {
         runOnUiThread(() -> petImage.setImageResource(resId));
     }
@@ -397,7 +359,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        
+
         // Liberar media players para evitar vazamento de memória
         if (somFeliz != null) somFeliz.release();
         if (somDoente != null) somDoente.release();
@@ -408,4 +370,3 @@ public class MainActivity extends AppCompatActivity {
         doencaHandler.removeCallbacks(doencaRunnable);
         idleHandler.removeCallbacks(idleRunnable);
     }
-}
