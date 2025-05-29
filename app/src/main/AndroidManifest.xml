@@ -26,8 +26,7 @@
 
         <!-- Outras activities -->
         <activity android:name=".MinigamesActivity" />
-        <activity android:name=".JogoBolhasActivity" />
-        <activity android:name=".JogoMemoriaActivity" />
+        <activity android:name=".PongActivity" />
 
     </application>
 

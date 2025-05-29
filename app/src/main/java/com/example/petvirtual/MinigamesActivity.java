@@ -11,12 +11,8 @@ public class MinigamesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_minigames);
 
-        findViewById(R.id.btnBolhas).setOnClickListener(v -> {
-            startActivity(new Intent(this, JogoBolhasActivity.class));
-        });
-
-        findViewById(R.id.btnMemoria).setOnClickListener(v -> {
-            startActivity(new Intent(this, JogoMemoriaActivity.class));
+        findViewById(R.id.btnPong).setOnClickListener(v -> {
+            startActivity(new Intent(this, PongActivity.class));
         });
 
         findViewById(R.id.btnVoltar).setOnClickListener(v -> {

@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -22,21 +21,22 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
+    <!-- Layout com botões principais -->
+
     <LinearLayout
         android:id="@+id/buttonLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:gravity="center"
         android:orientation="horizontal"
+        android:gravity="center"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/cenarioImage"
-        app:layout_constraintVertical_bias="0.023">
+        app:layout_constraintVertical_bias="0.02">
 
-        <!-- Botões -->
         <Button
             android:id="@+id/feedButton"
             android:layout_width="wrap_content"
@@ -58,35 +58,72 @@
             android:text="Medicar" />
     </LinearLayout>
 
-    <!-- Imagem do pet -->
+    <!-- Botão Aquecer -->
+    <Button
+        android:id="@+id/buttonAquecer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Aquecer"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/buttonLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Botão Eclodir -->
+    <Button
+        android:id="@+id/buttonEclodir"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Eclodir"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/buttonAquecer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Ovo  -->
+
+    <ImageView
+        android:id="@+id/eggImage"
+        android:layout_width="238dp"
+        android:layout_height="233dp"
+        android:layout_marginTop="300dp"
+        android:src="@drawable/ovo"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.393"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/buttonEclodir" />
+
+    <!-- Imagem do pet (pintinho) - inicialmente oculta -->
+
     <ImageView
         android:id="@+id/petImage"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:src="@drawable/pet"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/buttonLayout"
-        app:layout_constraintVertical_bias="0.69" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.7" />
 
-    <!-- barra de vida -->
+    <!-- Barra de vida -->
+
     <ProgressBar
         android:id="@+id/lifeBar"
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:layout_width="222dp"
         android:layout_height="9dp"
-        android:layout_marginTop="8dp"
         android:max="100"
         android:progress="100"
         android:progressDrawable="@drawable/progress_life"
-        app:layout_constraintBottom_toTopOf="@id/petImage"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.49"
-        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/buttonLayout"
-        app:layout_constraintVertical_bias="0.027" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/petImage"
+        app:layout_constraintVertical_bias="0.03" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

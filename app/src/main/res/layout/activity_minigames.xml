@@ -6,16 +6,11 @@
     android:layout_height="match_parent">
 
     <Button
-        android:id="@+id/btnBolhas"
+        android:id="@+id/btnPong"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Estourar Bolhas" />
+        android:text="Pong" />
 
-    <Button
-        android:id="@+id/btnMemoria"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Jogo da Memória" />
 
     <Button
         android:id="@+id/btnVoltar"

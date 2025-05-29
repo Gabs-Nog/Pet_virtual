@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/frameLayoutPong"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- A view do jogo será adicionada via código -->
+
+    <LinearLayout
+        android:id="@+id/layoutButtons"
+        android:orientation="horizontal"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <Button
+            android:id="@+id/btnRestart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reiniciar" />
+
+        <Button
+            android:id="@+id/btnVoltar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Voltar"
+            android:layout_marginStart="16dp" />
+
+    </LinearLayout>
+
+</FrameLayout>
