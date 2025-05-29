@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -13,12 +14,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.view.animation.CycleInterpolator;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Estágio inicial do pet
+    private boolean isOvo = true;
+    private int aquecimentos = 0;
+    private final int AQUECIMENTOS_PARA_ECLODIR = 5;
+
     // Componentes da interface
-    private Button feedButton, playButton, buttonMedicar;
-    private ImageView petImage;
+    private Button feedButton, playButton, buttonMedicar, buttonAquecer, buttonEclodir;
+    private ImageView petImage, eggImage;
     private ProgressBar lifeBar;
 
     // Estados do pet
@@ -27,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean isPetDoente = false;
     private boolean isPetBravo = false;
     private boolean isChorando = false;
+    private boolean isEggStage = true;
 
     // Vida do pet
     private int vida = 100;
@@ -66,20 +76,61 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        // Configura padding para a tela ocupar o espaço corretamente
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
         // Vincula componentes da interface
         feedButton = findViewById(R.id.feedButton);
         playButton = findViewById(R.id.playButton);
         buttonMedicar = findViewById(R.id.buttonMedicar);
         petImage = findViewById(R.id.petImage);
         lifeBar = findViewById(R.id.lifeBar);
-        lifeBar.setProgress(vida);
+        eggImage = findViewById(R.id.eggImage);
+        buttonAquecer = findViewById(R.id.buttonAquecer);
+        buttonEclodir = findViewById(R.id.buttonEclodir);
+
+        // Inicialmente, mostra o ovo e oculta os controles do pet
+        petImage.setImageResource(R.drawable.ovo);
+        petImage.setVisibility(View.GONE);
+        lifeBar.setVisibility(View.GONE);
+        feedButton.setVisibility(View.GONE);
+        playButton.setVisibility(View.GONE);
+        buttonMedicar.setVisibility(View.GONE);
+        buttonEclodir.setVisibility(View.GONE);
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        // Botão Aquecer (fase do ovo)
+        buttonAquecer.setOnClickListener(v -> {
+            if (!isOvo) return;
+
+            aquecimentos++;
+            animarAquecimentoOvo();
+
+            if (aquecimentos >= AQUECIMENTOS_PARA_ECLODIR) {
+                Toast.makeText(this, "O ovo está pronto para eclodir!", Toast.LENGTH_SHORT).show();
+                buttonEclodir.setVisibility(View.VISIBLE);
+                buttonAquecer.setEnabled(false);
+            }
+        });
+
+        // Botão Eclodir (libera o pet)
+        buttonEclodir.setOnClickListener(v -> {
+            eggImage.setVisibility(View.GONE);
+            buttonAquecer.setVisibility(View.GONE);
+            buttonEclodir.setVisibility(View.GONE);
+            petImage.setVisibility(View.VISIBLE);
+            lifeBar.setVisibility(View.VISIBLE);
+            feedButton.setVisibility(View.VISIBLE);
+            playButton.setVisibility(View.VISIBLE);
+            buttonMedicar.setVisibility(View.VISIBLE);
+            isEggStage = false;
+            isOvo = false;
+            iniciarTimerDoenca();
+            iniciarMonitoramentoInatividade();
+            vidaHandler.postDelayed(vidaRunnable, INTERVALO_VIDA);
+        });
 
         // Botão de alimentar
         feedButton.setOnClickListener(v -> {
@@ -92,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
             resetarInatividade();
         });
 
-        // Botão de jogar (abre outra tela)
+        // Botão de jogar
         playButton.setOnClickListener(v -> {
             abrirMenuMinigames();
             resetarInatividade();
@@ -102,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         buttonMedicar.setOnClickListener(v -> {
             if (isPetDoente) {
                 isPetDoente = false;
-                Toast.makeText(this, "Você medicou o pet e ele está saudável!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Você medicou o pet!", Toast.LENGTH_SHORT).show();
                 atualizarImagemPet(R.drawable.pet);
                 resetarTimerDoenca();
             } else {
@@ -111,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
             resetarInatividade();
         });
 
-        // Eventos de toque no pet
+        // Interações de toque no pet
         petImage.setOnTouchListener((v, event) -> {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
@@ -123,10 +174,10 @@ public class MainActivity extends AppCompatActivity {
                         atualizarImagemPet(R.drawable.pet_feliz);
                         isPetHappy = true;
                         Toast.makeText(this, "Você fez carinho no pet!", Toast.LENGTH_SHORT).show();
-                        runOnUiThread(() -> new Handler().postDelayed(() -> {
+                        new Handler().postDelayed(() -> {
                             atualizarImagemPet(R.drawable.pet);
                             isPetHappy = false;
-                        }, 1000));
+                        }, 1000);
                     }
                     resetarInatividade();
                     return true;
@@ -135,7 +186,6 @@ public class MainActivity extends AppCompatActivity {
                         vida = Math.max(vida - 10, 0);
                         lifeBar.setProgress(vida);
                         verificarEstadoDeSaude();
-
                         if (isChorando) {
                             iniciarAnimacaoChoro();
                         } else if (isPetBravo) {
@@ -144,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             atualizarImagemPet(R.drawable.pet_bravo);
                             isPetBravo = true;
-                            runOnUiThread(() -> new Handler().postDelayed(() -> atualizarImagemPet(R.drawable.pet), 2000));
+                            new Handler().postDelayed(() -> atualizarImagemPet(R.drawable.pet), 2000);
                         }
                         resetarInatividade();
                     }
@@ -152,19 +202,20 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         });
-
-        // Inicia timers principais
-        iniciarTimerDoenca();
-        iniciarMonitoramentoInatividade();
-        vidaHandler.postDelayed(vidaRunnable, INTERVALO_VIDA);
     }
 
-    // Atualiza a imagem do pet
+    // Animação de tremor do ovo
+    private void animarAquecimentoOvo() {
+        Animation tremor = new TranslateAnimation(-10, 10, 0, 0);
+        tremor.setDuration(100);
+        tremor.setInterpolator(new CycleInterpolator(5));
+        eggImage.startAnimation(tremor);
+    }
+
     private void atualizarImagemPet(int resId) {
         runOnUiThread(() -> petImage.setImageResource(resId));
     }
 
-    // Animações com múltiplas imagens
     private void animarImagensSequenciais(int[] imagens, int intervalo, int repeticoes) {
         Handler handler = new Handler();
         for (int i = 0; i < repeticoes; i++) {
@@ -173,7 +224,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Animação de choro
     private void iniciarAnimacaoChoro() {
         isChorando = true;
         final int[] imagens = {R.drawable.pet_triste1, R.drawable.pet_triste2};
@@ -185,7 +235,6 @@ public class MainActivity extends AppCompatActivity {
         }, 1600);
     }
 
-    // Animação de pet doente (loop infinito enquanto doente)
     private void iniciarAnimacaoDoente() {
         final int[] imagens = {R.drawable.pet_doente1, R.drawable.pet_doente2};
         Runnable animacao = new Runnable() {
@@ -202,20 +251,16 @@ public class MainActivity extends AppCompatActivity {
         animacao.run();
     }
 
-    // Animação de alimentação
     private void animarAlimentar() {
         boolean comidaPodre = (int) (Math.random() * 25) == 0;
-
         if (comidaPodre) {
             adoecerPet("A comida estava podre! O pet ficou doente!");
         } else {
             vida = Math.min(vida + 15, VIDA_MAXIMA);
             Toast.makeText(this, "Você alimentou o pet!", Toast.LENGTH_SHORT).show();
         }
-
         lifeBar.setProgress(vida);
         verificarEstadoDeSaude();
-
         int[] imagens = {
                 R.drawable.pet_alimentando1,
                 R.drawable.pet_alimentando2,
@@ -225,7 +270,6 @@ public class MainActivity extends AppCompatActivity {
         new Handler().postDelayed(() -> atualizarImagemPet(R.drawable.pet), imagens.length * 2 * 300);
     }
 
-    // Pet adoece
     private void adoecerPet(String motivo) {
         if (!isPetDoente) {
             isPetDoente = true;
@@ -234,19 +278,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Inicia temporizador de doença por inatividade
     private void iniciarTimerDoenca() {
         doencaRunnable = () -> adoecerPet("O pet ficou doente! 😷");
         doencaHandler.postDelayed(doencaRunnable, TEMPO_FICAR_DOENTE);
     }
 
-    // Reinicia o timer de doença
     private void resetarTimerDoenca() {
         doencaHandler.removeCallbacks(doencaRunnable);
         iniciarTimerDoenca();
     }
 
-    // Inicia o monitoramento de inatividade (animações se o pet estiver entediado)
     private void iniciarMonitoramentoInatividade() {
         idleRunnable = () -> {
             if (!isPetDoente) {
@@ -263,13 +304,11 @@ public class MainActivity extends AppCompatActivity {
         idleHandler.postDelayed(idleRunnable, TEMPO_OCIOSO);
     }
 
-    // Reinicia o timer de inatividade
     private void resetarInatividade() {
         idleHandler.removeCallbacks(idleRunnable);
         idleHandler.postDelayed(idleRunnable, TEMPO_OCIOSO);
     }
 
-    // Verifica se o pet deve adoecer por vida baixa
     private void verificarEstadoDeSaude() {
         if (vida < 75 && !isPetDoente) {
             if ((int)(Math.random() * 10) == 0) {
@@ -278,24 +317,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Abre a tela de minigames
     private void abrirMenuMinigames() {
         Intent intent = new Intent(this, MinigamesActivity.class);
         startActivity(intent);
     }
 
-    // Remove todos os callbacks para evitar vazamento de memória
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        // Remove o runnable que reduz vida periodicamente
         vidaHandler.removeCallbacks(vidaRunnable);
-
-        // Remove o runnable que cuida da doença do pet
         doencaHandler.removeCallbacks(doencaRunnable);
-
-        // Remove o runnable que monitora inatividade
         idleHandler.removeCallbacks(idleRunnable);
     }
 }
