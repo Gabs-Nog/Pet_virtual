@@ -81,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-<<<<<<< HEAD
         // Vincula componentes
         buttonLayout = findViewById(R.id.buttonLayout);
         feedButton = findViewById(R.id.feedButton);
@@ -102,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Inicialmente: só ovo visível
         eggImage.setVisibility(View.VISIBLE);
-=======
+
         // Vincula componentes da interface
         feedButton = findViewById(R.id.feedButton);
         playButton = findViewById(R.id.playButton);
@@ -115,7 +114,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Inicialmente, mostra o ovo e oculta os controles do pet
         petImage.setImageResource(R.drawable.ovo);
->>>>>>> b22453416960a8a5dc6c6f96a61622fece235dd9
         petImage.setVisibility(View.GONE);
         lifeBar.setVisibility(View.GONE);
         feedButton.setVisibility(View.GONE);
@@ -123,23 +121,19 @@ public class MainActivity extends AppCompatActivity {
         buttonMedicar.setVisibility(View.GONE);
         buttonEclodir.setVisibility(View.GONE);
 
-<<<<<<< HEAD
+
         // Ajusta padding para sistema de barras (status/navigation)
-=======
->>>>>>> b22453416960a8a5dc6c6f96a61622fece235dd9
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-<<<<<<< HEAD
         // Botão aquecer ovo
         buttonAquecer.setOnClickListener(v -> {
             if (!isOvo) return;
             aquecimentos++;
             // Aqui você pode animar o ovo se quiser
-=======
         // Botão Aquecer (fase do ovo)
         buttonAquecer.setOnClickListener(v -> {
             if (!isOvo) return;
@@ -170,7 +164,6 @@ public class MainActivity extends AppCompatActivity {
             iniciarMonitoramentoInatividade();
             vidaHandler.postDelayed(vidaRunnable, INTERVALO_VIDA);
         });
->>>>>>> b22453416960a8a5dc6c6f96a61622fece235dd9
 
             if (aquecimentos >= AQUECIMENTOS_PARA_ECLODIR) {
                 Toast.makeText(this, "O ovo está pronto para eclodir!", Toast.LENGTH_SHORT).show();
@@ -209,9 +202,6 @@ public class MainActivity extends AppCompatActivity {
             resetarInatividade();
         });
 
-<<<<<<< HEAD
-        // Botão brincar (minigames)
-=======
         // Botão de jogar
 >>>>>>> b22453416960a8a5dc6c6f96a61622fece235dd9
         playButton.setOnClickListener(v -> {
@@ -250,10 +240,7 @@ public class MainActivity extends AppCompatActivity {
                         isPetHappy = true;
                         somFeliz.start();
                         Toast.makeText(this, "Você fez carinho no pet!", Toast.LENGTH_SHORT).show();
-<<<<<<< HEAD
-
-=======
->>>>>>> b22453416960a8a5dc6c6f96a61622fece235dd9
+                        
                         new Handler().postDelayed(() -> {
                             atualizarImagemPet(R.drawable.pet);
                             isPetHappy = false;
@@ -286,8 +273,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-<<<<<<< HEAD
-=======
     // Animação de tremor do ovo
     private void animarAquecimentoOvo() {
         Animation tremor = new TranslateAnimation(-10, 10, 0, 0);
@@ -412,17 +397,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-<<<<<<< HEAD
+        
         // Liberar media players para evitar vazamento de memória
         if (somFeliz != null) somFeliz.release();
         if (somDoente != null) somDoente.release();
         if (somChorar != null) somChorar.release();
         if (somBravo != null) somBravo.release();
         if (somAlimentar != null) somAlimentar.release();
-=======
         vidaHandler.removeCallbacks(vidaRunnable);
         doencaHandler.removeCallbacks(doencaRunnable);
         idleHandler.removeCallbacks(idleRunnable);
->>>>>>> b22453416960a8a5dc6c6f96a61622fece235dd9
     }
 }
