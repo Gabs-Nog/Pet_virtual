@@ -16,6 +16,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.view.animation.CycleInterpolator;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -78,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+<<<<<<< HEAD
         // Vincula componentes
         buttonLayout = findViewById(R.id.buttonLayout);
         feedButton = findViewById(R.id.feedButton);
@@ -98,6 +102,20 @@ public class MainActivity extends AppCompatActivity {
 
         // Inicialmente: só ovo visível
         eggImage.setVisibility(View.VISIBLE);
+=======
+        // Vincula componentes da interface
+        feedButton = findViewById(R.id.feedButton);
+        playButton = findViewById(R.id.playButton);
+        buttonMedicar = findViewById(R.id.buttonMedicar);
+        petImage = findViewById(R.id.petImage);
+        lifeBar = findViewById(R.id.lifeBar);
+        eggImage = findViewById(R.id.eggImage);
+        buttonAquecer = findViewById(R.id.buttonAquecer);
+        buttonEclodir = findViewById(R.id.buttonEclodir);
+
+        // Inicialmente, mostra o ovo e oculta os controles do pet
+        petImage.setImageResource(R.drawable.ovo);
+>>>>>>> b22453416960a8a5dc6c6f96a61622fece235dd9
         petImage.setVisibility(View.GONE);
         lifeBar.setVisibility(View.GONE);
         feedButton.setVisibility(View.GONE);
@@ -105,18 +123,54 @@ public class MainActivity extends AppCompatActivity {
         buttonMedicar.setVisibility(View.GONE);
         buttonEclodir.setVisibility(View.GONE);
 
+<<<<<<< HEAD
         // Ajusta padding para sistema de barras (status/navigation)
+=======
+>>>>>>> b22453416960a8a5dc6c6f96a61622fece235dd9
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
+<<<<<<< HEAD
         // Botão aquecer ovo
         buttonAquecer.setOnClickListener(v -> {
             if (!isOvo) return;
             aquecimentos++;
             // Aqui você pode animar o ovo se quiser
+=======
+        // Botão Aquecer (fase do ovo)
+        buttonAquecer.setOnClickListener(v -> {
+            if (!isOvo) return;
+
+            aquecimentos++;
+            animarAquecimentoOvo();
+
+            if (aquecimentos >= AQUECIMENTOS_PARA_ECLODIR) {
+                Toast.makeText(this, "O ovo está pronto para eclodir!", Toast.LENGTH_SHORT).show();
+                buttonEclodir.setVisibility(View.VISIBLE);
+                buttonAquecer.setEnabled(false);
+            }
+        });
+
+        // Botão Eclodir (libera o pet)
+        buttonEclodir.setOnClickListener(v -> {
+            eggImage.setVisibility(View.GONE);
+            buttonAquecer.setVisibility(View.GONE);
+            buttonEclodir.setVisibility(View.GONE);
+            petImage.setVisibility(View.VISIBLE);
+            lifeBar.setVisibility(View.VISIBLE);
+            feedButton.setVisibility(View.VISIBLE);
+            playButton.setVisibility(View.VISIBLE);
+            buttonMedicar.setVisibility(View.VISIBLE);
+            isEggStage = false;
+            isOvo = false;
+            iniciarTimerDoenca();
+            iniciarMonitoramentoInatividade();
+            vidaHandler.postDelayed(vidaRunnable, INTERVALO_VIDA);
+        });
+>>>>>>> b22453416960a8a5dc6c6f96a61622fece235dd9
 
             if (aquecimentos >= AQUECIMENTOS_PARA_ECLODIR) {
                 Toast.makeText(this, "O ovo está pronto para eclodir!", Toast.LENGTH_SHORT).show();
@@ -155,7 +209,11 @@ public class MainActivity extends AppCompatActivity {
             resetarInatividade();
         });
 
+<<<<<<< HEAD
         // Botão brincar (minigames)
+=======
+        // Botão de jogar
+>>>>>>> b22453416960a8a5dc6c6f96a61622fece235dd9
         playButton.setOnClickListener(v -> {
             abrirMenuMinigames();
             resetarInatividade();
@@ -174,7 +232,11 @@ public class MainActivity extends AppCompatActivity {
             resetarInatividade();
         });
 
+<<<<<<< HEAD
         // Interação ao tocar no pet (carinho / tapas)
+=======
+        // Interações de toque no pet
+>>>>>>> b22453416960a8a5dc6c6f96a61622fece235dd9
         petImage.setOnTouchListener((v, event) -> {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
@@ -188,7 +250,10 @@ public class MainActivity extends AppCompatActivity {
                         isPetHappy = true;
                         somFeliz.start();
                         Toast.makeText(this, "Você fez carinho no pet!", Toast.LENGTH_SHORT).show();
+<<<<<<< HEAD
 
+=======
+>>>>>>> b22453416960a8a5dc6c6f96a61622fece235dd9
                         new Handler().postDelayed(() -> {
                             atualizarImagemPet(R.drawable.pet);
                             isPetHappy = false;
@@ -202,7 +267,6 @@ public class MainActivity extends AppCompatActivity {
                         vida = Math.max(vida - 10, 0);
                         lifeBar.setProgress(vida);
                         verificarEstadoDeSaude();
-
                         if (isChorando) {
                             iniciarAnimacaoChoro();
                         } else if (isPetBravo) {
@@ -222,6 +286,17 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+<<<<<<< HEAD
+=======
+    // Animação de tremor do ovo
+    private void animarAquecimentoOvo() {
+        Animation tremor = new TranslateAnimation(-10, 10, 0, 0);
+        tremor.setDuration(100);
+        tremor.setInterpolator(new CycleInterpolator(5));
+        eggImage.startAnimation(tremor);
+    }
+
+>>>>>>> b22453416960a8a5dc6c6f96a61622fece235dd9
     private void atualizarImagemPet(int resId) {
         runOnUiThread(() -> petImage.setImageResource(resId));
     }
@@ -273,7 +348,6 @@ public class MainActivity extends AppCompatActivity {
         }
         lifeBar.setProgress(vida);
         verificarEstadoDeSaude();
-
         int[] imagens = {
                 R.drawable.pet_alimentando1,
                 R.drawable.pet_alimentando2,
@@ -338,11 +412,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+<<<<<<< HEAD
         // Liberar media players para evitar vazamento de memória
         if (somFeliz != null) somFeliz.release();
         if (somDoente != null) somDoente.release();
         if (somChorar != null) somChorar.release();
         if (somBravo != null) somBravo.release();
         if (somAlimentar != null) somAlimentar.release();
+=======
+        vidaHandler.removeCallbacks(vidaRunnable);
+        doencaHandler.removeCallbacks(doencaRunnable);
+        idleHandler.removeCallbacks(idleRunnable);
+>>>>>>> b22453416960a8a5dc6c6f96a61622fece235dd9
     }
 }

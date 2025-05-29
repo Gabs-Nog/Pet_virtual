@@ -111,7 +111,7 @@ public class PongActivity extends AppCompatActivity {
             ballX += ballVelocityX;
             ballY += ballVelocityY;
 
-            // Rebater nas laterais (considerando o raio da bola)
+            // Rebater nas laterais (considerando o raio da bola).
             if (ballX - ballRadius < 0 || ballX + ballRadius > getWidth()) {
                 ballVelocityX *= -1;
             }
